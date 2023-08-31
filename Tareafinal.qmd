@@ -8,16 +8,11 @@ lang: es
 
 # Informe prueba
 
-Texto para evaluacion del curso 
-practicando el uso de quarto y github
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+Texto para evaluacion del curso practicando el uso de quarto y github
 
 ```{r}
-#| echo: false
-#| include: false 
+#| echo: false 
+#| warning: false
 
 library(tidyverse)
 library(tidymodels)
@@ -33,31 +28,35 @@ library(dplyr)
 You can add options to executable code like this
 
 ```{r}
-#| echo: false #codigo en pantalla
-#| include: true
+#| echo: false 
 
 ruta_csv <-"C:\\Users\\graciela.perez.IFOP\\Desktop\\quarto_ifop\\winequality-red.csv"
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+Analisis de base de datos de la acidez del vino tinto
 
 ```{r}
+#| echo: false 
 ruta_red <- read.csv("winequality-red.csv")
 
 ruta_red %>% head() %>% kable()%>% kable_classic_2(full_width=F)
 ```
 
+Re-Escalado
+
 ```{r}
-#Re-Escalado
+
+#| echo: false 
 
 ruta_red_a =scale(ruta_red, center=T, scale = T) %>% as.data.frame()
 
 ruta_red_a %>% head() %>% kable() %>% kable_classic_2(full_width=F)
 ```
 
-```{r}
-# Dividir los datos
+Tabla 1: composicion quimica del vino
 
+```{r}
+#| echo: false 
 train=createDataPartition(ruta_red_a$pH, p=0.8, list = FALSE)
 
 train.data=ruta_red_a[train,]
@@ -65,8 +64,10 @@ test.data=ruta_red_a[-train,]
 
 ```
 
+Modelo 1
+
 ```{r}
-#modelo1
+#| echo: false 
 
 lm1=lm(pH~.-quality,
        train.data)
@@ -74,14 +75,18 @@ lm1=lm(pH~.-quality,
 vif(lm1)
 ```
 
+Modelo 2
+
 ```{r}
-#modelo2
+
+#| echo: false 
 lm2=update(lm1,.~.-density)
 
 AIC(lm1, lm2)
 ```
 
 ```{r}
+#| echo: false 
 par(mfrow=c(2,2))
 
 plot(lm1, add.smooth = F)
