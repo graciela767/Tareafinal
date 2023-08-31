@@ -1,0 +1,88 @@
+---
+title: "Tarea_final"
+author: "Graciela Perez"
+format: pdf
+editor: visual
+lang: es
+---
+
+# Informe prueba
+
+Texto para evaluacion del curso 
+practicando el uso de quarto y github
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+#| echo: false
+#| include: false 
+
+library(tidyverse)
+library(tidymodels)
+library(psych)
+library(caret)
+library(readr)
+library(readxl)
+library(kableExtra)
+library(car)
+library(dplyr)
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false #codigo en pantalla
+#| include: true
+
+ruta_csv <-"C:\\Users\\graciela.perez.IFOP\\Desktop\\quarto_ifop\\winequality-red.csv"
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+```{r}
+ruta_red <- read.csv("winequality-red.csv")
+
+ruta_red %>% head() %>% kable()%>% kable_classic_2(full_width=F)
+```
+
+```{r}
+#Re-Escalado
+
+ruta_red_a =scale(ruta_red, center=T, scale = T) %>% as.data.frame()
+
+ruta_red_a %>% head() %>% kable() %>% kable_classic_2(full_width=F)
+```
+
+```{r}
+# Dividir los datos
+
+train=createDataPartition(ruta_red_a$pH, p=0.8, list = FALSE)
+
+train.data=ruta_red_a[train,]
+test.data=ruta_red_a[-train,]
+
+```
+
+```{r}
+#modelo1
+
+lm1=lm(pH~.-quality,
+       train.data)
+
+vif(lm1)
+```
+
+```{r}
+#modelo2
+lm2=update(lm1,.~.-density)
+
+AIC(lm1, lm2)
+```
+
+```{r}
+par(mfrow=c(2,2))
+
+plot(lm1, add.smooth = F)
+```
